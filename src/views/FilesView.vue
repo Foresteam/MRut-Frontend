@@ -1,23 +1,7 @@
 <template>
 	<div class="flex-col" style="height: 100%">
-		<div class="flex-row ui-block-b ui-block">
-			<p-dropdown
-				v-model="selectedUser"
-				:options="users"
-				style="flex-grow: 1;"
-				class="noround-right"
-			>
-				<template #value="slotProps">
-					<User v-if="slotProps.value" v-bind="slotProps.value"/>
-					<div v-else>
-						<div>No user</div>
-						<div>selected</div>
-					</div>
-				</template>
-				<template #option="slotProps">
-					<User v-bind="slotProps.option"/>
-				</template>
-			</p-dropdown>
+		<div class="flex-row ui-block-b ui-block set-wrapper">
+			<UsersDropdown v-model="selectedUser" :users="users"/>
 			<p-btn-toggle
 				v-model="applyForAll"
 				onLabel="Apply for all"
@@ -25,7 +9,6 @@
 				onIcon="pi pi-check"
 				offIcon="pi pi-times"
 				style="width: 160px"
-				class="noround-left"
 			/>
 		</div>
 		<div class="flex-row ui-block-v set-wrapper ui-block-v ui-block">
@@ -129,12 +112,12 @@
 
 <script>
 import '../assets/common-styles.css';
-import User from '../components/User.vue';
+import UsersDropdown from '../components/UsersDropdown.vue';
 import InputDialog from '../components/InputDialog.vue';
 
 export default {
 	components: {
-		User,
+		UsersDropdown,
 		InputDialog
 	},
 	data: () => ({
