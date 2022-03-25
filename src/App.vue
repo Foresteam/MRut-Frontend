@@ -46,13 +46,11 @@
 			'name-card': NameCard,
 			'app-tab': AppTab
 		},
-		data: () => ({
-			items: [
-				{ label: 'Main', to: '/' },
-				{ label: 'Files', to: '/files' },
-				{ label: 'Screen view', to: '/nahuy' }
-			]
-		})
+		data() {
+			return {
+				items: this.$router.getRoutes().map(v => ({ label: v.name, to: v.path }))
+			}
+		}
 	};
 </script>
 
