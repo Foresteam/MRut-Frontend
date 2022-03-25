@@ -27,10 +27,10 @@
     font-weight: 600;
     border-bottom: 1px solid var(--surface-d);
 }
-.icon-button-xsz {
+.button-bigtext {
 	padding: 0 !important;
 }
-.icon-button-xsz > span {
+.button-bigtext > span {
 	font-size: 20pt !important;
 }
 /* A wrapper to disable round and make elements look seemless */

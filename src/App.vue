@@ -167,4 +167,14 @@
 	#footer .p-divider::before {
 		border-left: 2px solid var(--surface-d) !important;
 	}
+
+	::-webkit-scrollbar {
+		width: 5px;
+	}
+	::-webkit-scrollbar-track {
+		background-color: grey;
+	}
+	::-webkit-scrollbar-thumb {
+		background: var(--indigo-600);
+	}
 </style>

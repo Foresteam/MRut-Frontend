@@ -1,6 +1,6 @@
 <template>
 	<div class="flex-col" style="height: 100%">
-		<div class="flex-row">
+		<div class="flex-row ui-block-b ui-block">
 			<p-dropdown
 				v-model="selectedUser"
 				:options="users"
@@ -28,7 +28,7 @@
 				class="noround-left"
 			/>
 		</div>
-		<div class="flex-row ui-block-v set-wrapper">
+		<div class="flex-row ui-block-v set-wrapper ui-block-v ui-block">
 			<p-btn icon="pi pi-arrow-left"/>
 			<p-btn icon="pi pi-arrow-right" disabled/>
 			<p-btn icon="pi pi-refresh"/>
@@ -39,7 +39,7 @@
 			<div class="flex-col">
 				<p-listbox
 					:options="places"
-					class="ui-block"
+					class="ui-block ui-block-v"
 					id="files-places"
 					@change="placeSelected"
 				>
@@ -67,7 +67,7 @@
 				</p-listbox>
 				<p-listbox
 					:options="devices"
-					class="ui-block"
+					class="ui-block ui-block-t"
 					id="files-devices"
 					style="flex-grow: 1"
 					@change="deviceSelected"
@@ -88,7 +88,7 @@
 			<p-listbox
 				v-model="selectedFiles"
 				:options="files"
-				class="ui-block"
+				class="ui-block ui-block-t"
 				style="flex-grow: 1"
 				multiple
 				metaKeySelection

@@ -29,7 +29,7 @@
 			</p-orderlist>
 			<div class="ui-block-t flex-row set-wrapper">
 				<p-input-text style="flex-grow: 1;" name="command" placeholder="Enter a command"/>
-				<p-btn icon="pi fi fi-flutter-right" class="icon-button-xsz"/>
+				<p-btn icon="pi fi fi-flutter-right" class="button-bigtext"/>
 			</div>
 			<div class="flex-row" id="misc-buttons">
 				<p-btn
