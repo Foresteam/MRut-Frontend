@@ -1,0 +1,247 @@
+<template>
+	<div class="flex-col" style="height: 100%">
+		<div class="flex-row">
+			<p-dropdown
+				v-model="selectedUser"
+				:options="users"
+				style="flex-grow: 1;"
+				class="noround-right"
+			>
+				<template #value="slotProps">
+					<User v-if="slotProps.value" v-bind="slotProps.value"/>
+					<div v-else>
+						<div>No user</div>
+						<div>selected</div>
+					</div>
+				</template>
+				<template #option="slotProps">
+					<User v-bind="slotProps.option"/>
+				</template>
+			</p-dropdown>
+			<p-btn-toggle
+				v-model="applyForAll"
+				onLabel="Apply for all"
+				offLabel="Apply for all"
+				onIcon="pi pi-check"
+				offIcon="pi pi-times"
+				style="width: 160px"
+				class="noround-left"
+			/>
+		</div>
+		<div class="flex-row ui-block-v set-wrapper">
+			<p-btn icon="pi pi-arrow-left"/>
+			<p-btn icon="pi pi-arrow-right" disabled/>
+			<p-btn icon="pi pi-refresh"/>
+			<p-btn icon="pi pi-upload"/>
+			<p-input-text style="flex-grow: 1" placeholder="Here must've been path..." v-model="path"/>
+		</div>
+		<div class="flex-row" style="flex-grow: 1">
+			<div class="flex-col">
+				<p-listbox
+					:options="places"
+					class="ui-block"
+					id="files-places"
+					@change="placeSelected"
+				>
+					<template #header>
+						<div class="listbox-header">
+							Places
+						</div>
+					</template>
+					<template #option="slotProps">
+						<div style="text-align: left">
+							<i :class="
+								(() => {
+									let t = { 'pi': true };
+									let iconClasses = slotProps.option.icon;
+									if (typeof(iconClasses) != 'object')
+										iconClasses = [iconClasses];
+									for (ic of iconClasses)
+										t[ic] = true;
+									return t;
+								})()
+							"></i>
+							{{ slotProps.option.name }}
+						</div>
+					</template>
+				</p-listbox>
+				<p-listbox
+					:options="devices"
+					class="ui-block"
+					id="files-devices"
+					style="flex-grow: 1"
+					@change="deviceSelected"
+				>
+					<template #header>
+						<div class="listbox-header">
+							Devices
+						</div>
+					</template>
+					<template #option="slotProps">
+						<div style="text-align: left">
+							<i class="pi fi fi-disk"></i>
+							Disk {{ slotProps.option.name }}
+						</div>
+					</template>
+				</p-listbox>
+			</div>
+			<p-listbox
+				v-model="selectedFiles"
+				:options="files"
+				class="ui-block"
+				style="flex-grow: 1"
+				multiple
+				metaKeySelection
+				@contextmenu="filesRightClick"
+				id="file-manager"
+				ref="fileManager"
+			>
+				<template #option="slotProps">
+					<div style="text-align: left" class="flex-row">
+						<div style="width: 70%">
+							<i :class="
+								// i love JS for i can do such weird things here
+								(() => {
+									let t = { 'pi': true };
+									t[getFileIcon(slotProps.option.type)] = true;
+									return t;
+								})()
+							"></i>
+							{{slotProps.option.name}}
+						</div>
+						<div style="width: 15%">{{slotProps.option.size}}</div>
+						<div style="width: 15%">{{slotProps.option.dateModified}}</div>
+					</div>
+				</template>
+			</p-listbox>
+			<p-context-menu :model="fileCtx" ref="filesCtxMenu"/>
+			<InputDialog
+				query="Enter new filename"
+				title="Rename"
+				:initial-value="lastSelectedFile?.name"
+				help-text="'#' will be replaced with number, if multiple files are selected"
+				@submit="doRenameFiles"
+				ref="fileRenameDialog"
+			/>
+		</div>
+	</div>
+</template>
+
+<script>
+import '../assets/common-styles.css';
+import User from '../components/User.vue';
+import InputDialog from '../components/InputDialog.vue';
+
+export default {
+	components: {
+		User,
+		InputDialog
+	},
+	data: () => ({
+		selectedUser: null,
+		selectedFiles: null,
+		applyForAll: false,
+		path: '',
+		files: [
+			{ type: 'dir', name: 'file1', size: '1MB', dateModified: '47.07.2007' },
+			{ type: 'file', name: 'file2', size: '1MB', dateModified: '47.07.2007' },
+			{ type: 'dir', name: 'file3', size: '1MB', dateModified: '47.07.2007' },
+			{ type: 'file', name: 'file4', size: '1MB', dateModified: '47.07.2007' },
+		],
+		fileCtx: [
+			{ label: 'Download', icon: 'pi pi-download', command: null },
+			{ label: 'Move', icon: 'pi pi-link', command: null },
+			{ label: 'Copy', icon: 'pi pi-copy', command: null },
+			{ label: 'Rename', icon: 'pi pi-pencil', command: null },
+			{ label: 'Delete', icon: 'pi pi-times', command: null },
+		],
+		places: [
+			{ name: 'Home', icon: 'pi-home' },
+			{ name: 'Desktop', icon: 'pi-desktop' },
+			{ name: 'Downloads', icon: 'pi-download' },
+			{ name: 'Documents', icon: ['fi', 'fi-documents'] },
+			{ name: 'Pictures', icon: 'pi-images' },
+			{ name: 'Videos', icon: 'pi-video' },
+		],
+		devices: [
+			{ name: 'Ass:\\', path: '/' }
+		]
+	}),
+	computed: {
+		users() {
+			return this.$store.state.users.filter(v => v.online);
+		},
+		lastSelectedFile() {
+			return this.selectedFiles?.at(0);
+		}
+	},
+	methods: {
+		/**
+		 * @param {PointerEvent} e
+		 */
+		filesRightClick(e) {
+			// duplicate the event to select the file entry
+			e.target.dispatchEvent(new MouseEvent('click', e));
+			if (this.selectedFiles?.length > 0) {
+				this.$refs.filesCtxMenu.hide();
+				this.$refs.filesCtxMenu.show(e);
+			}
+			else {
+				e.stopPropagation();
+				e.preventDefault();
+			}
+		},
+		getFileIcon(type) {
+			return { 'dir': 'pi-folder', 'file': 'pi-file', 'drive': 'pi-drive' }[type];
+		},
+		placeSelected({ value }) {
+		},
+		deviceSelected({ value }) {
+		},
+
+		downloadFiles() {
+			this.$toast.add({
+				severity:'success',
+				summary: 'Success',
+				detail: 'Files downloaded',
+				life: 3000
+			});
+		},
+		moveFiles() {
+
+		},
+		copyFiles() {
+
+		},
+		askRenameFiles() {
+			this.$refs.fileRenameDialog.show();
+		},
+		doRenameFiles(newNameTemplate) {
+			alert('User entered: ' + newNameTemplate);
+		},
+		deleteFiles(e) {
+			this.$confirm.require({
+				message: 'Do you really want to delete these?',
+				header: 'Confirmation',
+				icon: 'pi pi-exclamation-triangle',
+				accept: () => {
+					// do delete files
+				}
+			});
+		}
+	},
+	mounted() {
+		for (let [i, v] of Object.entries(['downloadFiles', 'moveFiles', 'copyFiles', 'askRenameFiles', 'deleteFiles']))
+			this.$data.fileCtx[i].command = this[v];
+	}
+};
+</script>
+
+<style>
+	#file-manager .p-listbox-item {
+		padding: 0;
+	}
+	#file-manager .p-listbox-item > * {
+		margin: 0.5rem 1rem;
+	}
+</style>
