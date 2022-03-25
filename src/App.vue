@@ -169,12 +169,18 @@
 	}
 
 	::-webkit-scrollbar {
-		width: 5px;
+		width: 7px;
 	}
 	::-webkit-scrollbar-track {
-		background-color: grey;
+		background-color: var(--surface-c);
 	}
 	::-webkit-scrollbar-thumb {
-		background: var(--indigo-600);
+		background: var(--surface-d);
+	}
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--surface-100);
+	}
+	::-webkit-scrollbar-thumb:active {
+		background: var(--surface-200);
 	}
 </style>
