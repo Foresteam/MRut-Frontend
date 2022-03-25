@@ -12,12 +12,31 @@ import '../assets/common-styles.css';
 
 export default {
 	data: () => ({
-		streamBlob: null
+		streamBlob: null,
+		_streamURL: null
 	}),
+	watch: {
+		streamBlob(_, newBlob) {
+			let urlCreator = window.URL || window.webkitURL;
+			if (newBlob) {
+				urlCreator.revokeObjectURL(this._streamURL);
+				this._streamURL = urlCreator.createObjectURL(newBlob);
+			}
+			else
+				this._streamURL = null;
+		}
+	},
 	computed: {
 		streamURL() {
-			let urlCreator = window.URL || window.webkitURL;
-			return this.streamBlob ? urlCreator.createObjectURL(this.streamBlob) : '/no_stream.webp';
+			return this._streamURL ? this._streamURL : '/no_stream.webp';
+		}
+	},
+	methods: {
+		/**
+		 * @param {Blob} image
+		 */
+		receiveImage(image) {
+			this.streamBlob = image;
 		}
 	}
 };
