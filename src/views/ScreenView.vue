@@ -9,6 +9,7 @@
 					offIcon="pi pi-times"
 				/>
 			</div>
+			<MiscButtons class="ui-block-t" />
 		</div>
 		<div id="stream-view" class="ui-block">
 			<img
@@ -25,10 +26,12 @@
 <script>
 import '../assets/common-styles.css';
 import UsersDropdown from '../components/UsersDropdown.vue';
+import MiscButtons from '../components/MiscButtons.vue';
 
 export default {
 	components: {
-		UsersDropdown
+		UsersDropdown,
+		MiscButtons
 	},
 	data: () => ({
 		streamBlob: null,
@@ -90,6 +93,15 @@ export default {
 </script>
 
 <style>
+	.misc-buttons {
+		display: flex;
+		flex-flow: column;
+	}
+	.misc-buttons > .p-button {
+		margin: 2pt;
+		width: 100%;
+	}
+
 	#no-stream {
 		font-weight: bold;
 		position: absolute;

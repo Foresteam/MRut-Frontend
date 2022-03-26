@@ -24,6 +24,7 @@ import Listbox from 'primevue/listbox';
 import Dropdown from 'primevue/dropdown';
 // import Breadcrumb from 'primevue/breadcrumb';
 import ContextMenu from 'primevue/contextmenu';
+import Panel from 'primevue/panel';
 
 app.component('p-tab-menu', TabMenu);
 app.component('p-divider', Divider);
@@ -36,6 +37,7 @@ app.component('p-listbox', Listbox);
 app.component('p-dropdown', Dropdown);
 // app.component('p-breadcrumb', Breadcrumb);
 app.component('p-context-menu', ContextMenu);
+app.component('p-panel', Panel);
 
 app.use(PrimeVue);
 app.use(ToastService);
