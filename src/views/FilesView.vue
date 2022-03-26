@@ -1,7 +1,7 @@
 <template>
 	<div class="flex-col" style="height: 100%">
 		<div class="flex-row ui-block-b ui-block set-wrapper">
-			<UsersDropdown v-model="selectedUser" :users="users"/>
+			<UsersDropdown v-model="selectedUser" :users="onlineUsers" style="flex-grow: 1"/>
 			<p-btn-toggle
 				v-model="applyForAll"
 				onLabel="Apply for all"
@@ -14,6 +14,7 @@
 		<div class="flex-row ui-block-v set-wrapper ui-block-v ui-block">
 			<p-btn icon="pi pi-arrow-left"/>
 			<p-btn icon="pi pi-arrow-right" disabled/>
+			<p-btn icon="pi pi-arrow-up"/>
 			<p-btn icon="pi pi-refresh"/>
 			<p-btn icon="pi pi-upload"/>
 			<p-input-text style="flex-grow: 1" placeholder="Here must've been path..." v-model="path"/>
@@ -100,11 +101,11 @@
 			<p-context-menu :model="fileCtx" ref="filesCtxMenu"/>
 			<InputDialog
 				query="Enter new filename"
-				title="Rename"
+				:title="filesRenameTitle"
 				:initial-value="lastSelectedFile?.name"
 				help-text="'#' will be replaced with number, if multiple files are selected"
 				@submit="doRenameFiles"
-				ref="fileRenameDialog"
+				ref="filesRenameDialog"
 			/>
 		</div>
 	</div>
@@ -124,7 +125,7 @@ export default {
 		selectedUser: null,
 		selectedFiles: null,
 		applyForAll: false,
-		path: '',
+		path: 'Ass:/School/1st September/Unlucky me/',
 		files: [
 			{ type: 'dir', name: 'file1', size: '1MB', dateModified: '47.07.2007' },
 			{ type: 'file', name: 'file2', size: '1MB', dateModified: '47.07.2007' },
@@ -151,11 +152,14 @@ export default {
 		]
 	}),
 	computed: {
-		users() {
+		onlineUsers() {
 			return this.$store.state.users.filter(v => v.online);
 		},
 		lastSelectedFile() {
 			return this.selectedFiles?.at(0);
+		},
+		filesRenameTitle() {
+			return `Rename ${this.selectedFiles?.length} file${this.selectedFiles?.length > 1 ? 's' : ''}`;
 		}
 	},
 	methods: {
@@ -164,7 +168,8 @@ export default {
 		 */
 		filesRightClick(e) {
 			// duplicate the event to select the file entry
-			e.target.dispatchEvent(new MouseEvent('click', e));
+			// but it makes even worse...
+			// e.target.dispatchEvent(new MouseEvent('click', e));
 			if (this.selectedFiles?.length > 0) {
 				this.$refs.filesCtxMenu.hide();
 				this.$refs.filesCtxMenu.show(e);
@@ -197,14 +202,14 @@ export default {
 
 		},
 		askRenameFiles() {
-			this.$refs.fileRenameDialog.show();
+			this.$refs.filesRenameDialog.show();
 		},
 		doRenameFiles(newNameTemplate) {
 			alert('User entered: ' + newNameTemplate);
 		},
 		deleteFiles(e) {
 			this.$confirm.require({
-				message: 'Do you really want to delete these?',
+				message: 'Delete those? It can\'t be undone.',
 				header: 'Confirmation',
 				icon: 'pi pi-exclamation-triangle',
 				accept: () => {

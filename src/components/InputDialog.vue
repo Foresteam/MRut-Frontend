@@ -1,14 +1,13 @@
 <template>
 	<p-dialog v-model:visible="shown" modal>
 		<template #header>
-			{{ title }}
+			<div class="p-dialog-title">
+				{{ title }}
+			</div>
 		</template>
 		<div class="flex-col">
 			<!-- <div style="margin: 15pt;"></div> -->
-			<div class="p-float-label flex-col" style="margin-top: 15pt; display: flex">
-				<p-input-text v-model="value" @submit="onSubmit"/>
-				<label>{{ query }}</label>
-			</div>
+			<p-input-text v-model="value" @submit="onSubmit" :placeholder="query"/>
 			<small style="display: block">{{ helpText }}</small>
 		</div>
 		<template #footer>

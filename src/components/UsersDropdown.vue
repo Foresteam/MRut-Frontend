@@ -2,7 +2,6 @@
 	<p-dropdown
 		v-model="modelValue"
 		:options="users"
-		style="flex-grow: 1;"
 		@change="({ value }) => $emit('update:modelValue', value)"
 	>
 		<template #value="slotProps">
