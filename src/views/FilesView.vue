@@ -209,7 +209,7 @@ export default {
 		},
 		deleteFiles(e) {
 			this.$confirm.require({
-				message: 'Delete those? It can\'t be undone.',
+				message: `Delete ${this.selectedFiles.length} file${this.selectedFiles.length > 1 ? 's' : ''}? It can't be undone.`,
 				header: 'Confirmation',
 				icon: 'pi pi-exclamation-triangle',
 				accept: () => {
