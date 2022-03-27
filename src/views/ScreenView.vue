@@ -15,11 +15,11 @@
 				v-model="captureCursor"
 				onLabel="Capture cursor"
 				offLabel="Capture cursor"
-				onIcon="pi pi-check"
-				offIcon="pi pi-times"
+				onIcon="pi pi-lock"
+				offIcon="pi pi-lock-open"
 				class="ui-block-b"
 			/>
-			<MiscButtons class="ui-block-t" />
+			<MiscButtons class="ui-block-t" :buttons="miscButtons" />
 		</div>
 		<div id="stream-view" class="ui-block">
 			<img
@@ -44,14 +44,26 @@ export default {
 		UsersDropdown,
 		MiscButtons
 	},
-	data: () => ({
+	data() { return {
 		streamBlob: null,
 		_streamURL: null,
 		streamOf: null,
 		captureCursor: false,
 
+		miscButtons: [
+			{ label: 'Message box', icon: 'pi pi-question-circle', callback: null },
+			{ label: 'Message box', icon: 'pi pi-info-circle', callback: null },
+			{ label: 'Message box', icon: 'pi pi-exclamation-triangle', callback: null },
+			{ label: 'Message box', icon: 'pi pi-times-circle', callback: null },
+			{ label: 'Do something nasty', callback: null },
+			{ label: 'Do something nasty', callback: null },
+			{ label: 'Do something nasty', callback: null },
+			{ label: 'Do something nasty', callback: null },
+			{ label: 'Do something nasty', callback: null },
+		],
+
 		lastMouseLeft: { event: null, when: 0 }
-	}),
+	}},
 	watch: {
 		streamBlob(_, newBlob) {
 			let urlCreator = window.URL || window.webkitURL;

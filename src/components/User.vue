@@ -3,7 +3,7 @@
         <Online :value="online" />
         <div>
             <div>
-                User #{{ id }}
+                {{ name }} #{{ id }}
             </div>
             <div>
                 {{ address }}
@@ -22,7 +22,7 @@
 import Online from './Online.vue';
 
 export default {
-    props: ['online', 'address', 'id'],
+    props: ['online', 'address', 'id', 'name'],
     components: {
         Online
     }

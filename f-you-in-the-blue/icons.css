@@ -18,3 +18,9 @@
 .fi-flutter-right:before {
     content: '3';
 }
+.fi-paste:before {
+    content: '4';
+}
+.fi-cut:before {
+    content: '5';
+}

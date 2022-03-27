@@ -50,6 +50,10 @@
 			return {
 				items: this.$router.getRoutes().map(v => ({ label: v.name, to: v.path }))
 			}
+		},
+		async mounted() {
+			await FWGUI.exposeEnd();
+			FWGUI.hello('fucken slave');
 		}
 	};
 </script>

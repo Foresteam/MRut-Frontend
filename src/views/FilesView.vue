@@ -123,7 +123,7 @@ export default {
 		UsersDropdown,
 		InputDialog
 	},
-	data: () => ({
+	data() { return {
 		selectedUser: null,
 		selectedFiles: null,
 		applyForAll: false,
@@ -135,11 +135,13 @@ export default {
 			{ type: 'file', name: 'file4', size: '1MB', dateModified: '47.07.2007' },
 		],
 		fileCtx: [
-			{ label: 'Download', icon: 'pi pi-download', command: null },
-			{ label: 'Move', icon: 'pi pi-link', command: null },
+			{ label: 'Run', icon: 'pi pi-play', command: null },
+			{ label: 'Download', icon: 'pi pi-download', command: this.downloadFiles },
+			{ label: 'Cut', icon: 'pi fi fi-cut', command: null },
 			{ label: 'Copy', icon: 'pi pi-copy', command: null },
-			{ label: 'Rename', icon: 'pi pi-pencil', command: null },
-			{ label: 'Delete', icon: 'pi pi-times', command: null },
+			{ label: 'Paste', icon: 'pi fi fi-paste', command: null, inactive: true },
+			{ label: 'Rename', icon: 'pi pi-pencil', command: this.askRenameFiles },
+			{ label: 'Delete', icon: 'pi pi-times', command: this.deleteFiles },
 		],
 		places: [
 			{ name: 'Home', icon: 'pi-home' },
@@ -152,7 +154,7 @@ export default {
 		devices: [
 			{ name: 'Ass:\\', path: '/' }
 		]
-	}),
+	}},
 	computed: {
 		lastSelectedFile() {
 			return this.selectedFiles?.at(0);
@@ -218,8 +220,6 @@ export default {
 		}
 	},
 	mounted() {
-		for (let [i, v] of Object.entries(['downloadFiles', 'moveFiles', 'copyFiles', 'askRenameFiles', 'deleteFiles']))
-			this.$data.fileCtx[i].command = this[v];
 	}
 };
 </script>

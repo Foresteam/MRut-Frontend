@@ -107,16 +107,6 @@ export default {
 </script>
 
 <style>
-	.misc-buttons {
-		flex-wrap: wrap;
-		justify-content: center;
-	}
-	.misc-buttons > .p-button {
-		margin: 2pt;
-		width: calc(100% / 6 - 4pt);
-		min-width: 120px;
-	}
-
 	#users-list {
 		height: 100%;
 		width: 30%;
