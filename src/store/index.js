@@ -33,6 +33,7 @@ export default createStore({
 			{ address: '127.0.0.1', connected: false, online: false },
 			{ address: '127.0.0.1', connected: false, online: false },
 		].map((v, i) => { v.id = i; return v }),
+		targetUser: null,
 		miscButtons: [
 			{ label: 'Do something nasty', callback: null },
 			{ label: 'Do something nasty', callback: null },
@@ -44,7 +45,10 @@ export default createStore({
 	}),
 	getters: {
 		connectedUsers(state) {
-			return state.users.filter(v => v.connected && v.online);
+			return state.users.filter(v => v.connected);
+		},
+		targetUser(state) {
+			return state.targetUser?.connected ? state.targetUser : null;
 		}
 	},
 	mutations: {
@@ -52,6 +56,9 @@ export default createStore({
 			// modify only the given properties
 			for (let [k, v] of Object.entries(user))
 				state.users[id][k] = v;
+		},
+		setTarget(state, id) {
+			state.targetUser = state.users[id];
 		}
 	},
 	// actions: {

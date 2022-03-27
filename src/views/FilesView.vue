@@ -1,11 +1,13 @@
 <template>
 	<div class="flex-col" style="height: 100%">
 		<div class="flex-row ui-block-b ui-block set-wrapper">
-			<UsersDropdown v-model="selectedUser" :users="onlineUsers" style="flex-grow: 1"/>
+			<UsersDropdown
+				style="flex-grow: 1"
+			/>
 			<p-btn-toggle
 				v-model="applyForAll"
-				onLabel="Apply for all"
-				offLabel="Apply for all"
+				onLabel="Apply to all"
+				offLabel="Apply to all"
 				onIcon="pi pi-check"
 				offIcon="pi pi-times"
 				style="width: 160px"
@@ -152,9 +154,6 @@ export default {
 		]
 	}),
 	computed: {
-		onlineUsers() {
-			return this.$store.state.users.filter(v => v.online);
-		},
 		lastSelectedFile() {
 			return this.selectedFiles?.at(0);
 		},

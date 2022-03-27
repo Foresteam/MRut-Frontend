@@ -1,8 +1,8 @@
 <template>
 	<p-dropdown
-		v-model="modelValue"
-		:options="users"
-		@change="({ value }) => $emit('update:modelValue', value)"
+		:modelValue="targetUser"
+		:options="connectedUsers"
+		@change="({ value: v }) => setTarget(v.id)"
 	>
 		<template #value="slotProps">
 			<User v-if="slotProps.value" v-bind="slotProps.value"/>
@@ -18,15 +18,18 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex';
 import User from './User.vue'
 
 export default {
 	components: {
 		User
 	},
-	props: {
-		users: Array(Object),
-		modelValue: Object
+	computed: {
+		...mapGetters(['targetUser', 'connectedUsers'])
+	},
+	methods: {
+		...mapMutations(['setTarget'])
 	}
 };
 </script>

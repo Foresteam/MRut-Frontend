@@ -1,22 +1,32 @@
 <template>
 	<div class="flex-row" style="height: 100%">
 		<div class="flex-col ui-block" id="screenview-panel">
-			<div class="flex-row set-wrapper">
-				<UsersDropdown style="flex-grow: 1"/>
+			<div class="flex-row set-wrapper ui-block-b">
+				<!-- pass the same value to update the target id -->
+				<UsersDropdown style="flex-grow: 1" @change="streamTargetChanged(streamOf)" />
 				<p-btn-toggle
-					v-model="connected"
+					:modelValue="!!streamOf"
+					@update:modelValue="streamTargetChanged"
 					onIcon="pi pi-check"
 					offIcon="pi pi-times"
 				/>
 			</div>
+			<p-btn-toggle
+				v-model="captureCursor"
+				onLabel="Capture cursor"
+				offLabel="Capture cursor"
+				onIcon="pi pi-check"
+				offIcon="pi pi-times"
+				class="ui-block-b"
+			/>
 			<MiscButtons class="ui-block-t" />
 		</div>
 		<div id="stream-view" class="ui-block">
 			<img
 				:src="streamURL"
-				@mousedown="e => passMouseLeft(e, false)"
-				@mouseup="e => passMouseLeft(e, true)"
-				@contextmenu="e => passRightClick(e)"
+				@mousedown.prevent="e => passMouseLeft(e, false)"
+				@mouseup.prevent="e => passMouseLeft(e, true)"
+				@contextmenu.prevent="e => passRightClick(e)"
 			>
 			<span v-if="!streamBlob" class="title" id="no-stream">The connection is <span>dead</span></span>
 		</div>
@@ -24,6 +34,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import '../assets/common-styles.css';
 import UsersDropdown from '../components/UsersDropdown.vue';
 import MiscButtons from '../components/MiscButtons.vue';
@@ -36,7 +47,8 @@ export default {
 	data: () => ({
 		streamBlob: null,
 		_streamURL: null,
-		connected: false,
+		streamOf: null,
+		captureCursor: false,
 
 		lastMouseLeft: { event: null, when: 0 }
 	}),
@@ -52,12 +64,13 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters(['targetUser']),
 		onlineUsers() {
 			return this.$store.state.users.filter(v => v.online);
 		},
 		streamURL() {
 			return this._streamURL ? this._streamURL : '/no_stream.webp';
-		},
+		}
 	},
 	methods: {
 		/** @param {Blob} image */
@@ -68,17 +81,12 @@ export default {
 		passRightClick(event) {
 			let [x, y] = [event.offsetX, event.offsetY];
 			// do something
-			event.stopPropagation();
-			event.preventDefault();
 		},
 		/**
 		 * @param {PointerEvent} event
 		 * @param {Boolean} end Is it the second snapshot
 		 * */
 		passMouseLeft(event, end) {
-			event.stopPropagation();
-			event.preventDefault();
-
 			if (!end) {
 				this.lastMouseLeft.event = event;
 				this.lastMouseLeft.when = Date.now();
@@ -87,6 +95,10 @@ export default {
 			let startPos = { x: this.lastMouseLeft.event.offsetX, y: this.lastMouseLeft.event.offsetY };
 			let endPos = { x: event.offsetX, y: event.offsetY };
 			console.log(startPos, endPos);
+		},
+		streamTargetChanged(v) {
+			this.streamOf = v ? this.targetUser?.id : null;
+			// send it to the server
 		}
 	}
 };
@@ -98,7 +110,9 @@ export default {
 		flex-flow: column;
 	}
 	.misc-buttons > .p-button {
-		margin: 2pt;
+		margin: 0;
+		margin-top: 2pt;
+		margin-bottom: 2pt;
 		width: 100%;
 	}
 
