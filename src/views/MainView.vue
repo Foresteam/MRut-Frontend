@@ -12,7 +12,7 @@
 					'user-button': true,
 					'user-button-selected': v.connected
 				}"
-				@click="modifyUser([v.id, { connected: !v.connected }])"
+				@click="updateUser([v.id, { connected: !v.connected }])"
 			>
 				<User v-bind="v" />
 			</div>
@@ -23,13 +23,15 @@
 					Logs
 				</template>
 				<div
-					v-for="v of $store.state.cmdLogs"
-					:key="v.time"
+					v-for="v in $store.state.cmdLogs"
+					:key="v.id"
 					:class="{
-						'flex-col': true
+						'flex-col': true,
+						'cmd-log': true,
+						'cmd-log-me': v.isMe
 					}"
 				>
-					[{{ v.time }}] {{ v.text }}
+					[{{ v.time }}{{ v.isMe ? '' : ' ' + v.sender }}] {{ v.text }}
 				</div>
 			</p-panel>
 			<div class="ui-block-t flex-row set-wrapper">
@@ -45,7 +47,7 @@
 
 <script>
 import '../assets/common-styles.css';
-import { mapMutations, mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import User from '../components/User.vue';
 import MiscButtons from '../components/MiscButtons.vue'
 
@@ -67,7 +69,7 @@ export default {
 		selection: null
 	}),
 	methods: {
-		...mapMutations(['modifyUser']),
+		...mapActions(['updateUser']),
 		async sendCommand() {
 			let cmd = this.command;
 			this.command = '';
@@ -119,5 +121,8 @@ export default {
 
 	.cmd-log {
 		text-align: left;
+	}
+	.cmd-log-me {
+		color: var(--primary-color);
 	}
 </style>

@@ -35,10 +35,20 @@ export default createStore({
 			state.targetUser = state.users[id];
 		},
 		cmdLog(state, log) {
-			state.cmdLogs.push(log);
+			state.cmdLogs.push({ id: state.cmdLogs.length, ...log });
 		}
 	},
-	// actions: {
-	// 	async fetchUsers() { /* ... */ }
-	// }
+	actions: {
+		async fetchUsers(ctx) {
+			await FWGUI.exposeEnd();
+			let u = await FWGUI.GetUsers();
+			for (let v of u)
+			ctx.commit('setUser', v);
+		},
+		async updateUser(ctx, [id, user]) {
+			ctx.commit('modifyUser', [id, user]);
+			await FWGUI.exposeEnd();
+			await FWGUI.UpdateUser([id, user]);
+		}
+	}
 })

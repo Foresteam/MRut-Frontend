@@ -33,6 +33,7 @@
 </template>
 
 <script>
+	import { mapActions } from 'vuex';
 	import NameCard from './components/NameCard.vue'
 	import AppTab from './components/AppTab.vue'
 	import Toast from 'primevue/toast';
@@ -51,10 +52,13 @@
 				items: this.$router.getRoutes().map(v => ({ label: v.name, to: v.path }))
 			}
 		},
+		methods: {
+			...mapActions(['fetchUsers'])
+		},
 		async mounted() {
 			for (let name of ['setUser', 'modifyUser', 'cmdLog'])
 				await FWGUI.expose(name, (...args) => this.$store.commit(name, ...args)); //this.$store.commit(name, args)
-			await FWGUI.exposeEnd();
+			this.fetchUsers();
 		}
 	};
 </script>
