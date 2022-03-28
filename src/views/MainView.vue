@@ -1,6 +1,6 @@
 <template>
 	<div style="height: 100%" class="flex-row">
-		<p-panel id="users-list" class="ui-block">
+		<p-panel id="users-list" class="ui-block list-panel">
 			<template #header>
 				Users
 			</template>
@@ -18,19 +18,23 @@
 			</div>
 		</p-panel>
 		<div class="ui-block flex-col" style="flex-grow: 1">
-			<p-orderlist v-model="cmdLogs" id="cmd-logs">
+			<p-panel id="cmd-logs" class="list-panel">
 				<template #header>
 					Logs
 				</template>
-				<template #item="slotProps">
-						<div class="cmd-log">
-							{{ slotProps.item.text }}
-						</div>
-				</template>
-			</p-orderlist>
+				<div
+					v-for="v of $store.state.cmdLogs"
+					:key="v.time"
+					:class="{
+						'flex-col': true
+					}"
+				>
+					[{{ v.time }}] {{ v.text }}
+				</div>
+			</p-panel>
 			<div class="ui-block-t flex-row set-wrapper">
-				<p-input-text style="flex-grow: 1;" name="command" placeholder="Enter a command"/>
-				<p-btn icon="pi fi fi-flutter-right" class="button-bigtext"/>
+				<p-input-text style="flex-grow: 1;" name="command" placeholder="Enter a command" @keyup.enter="sendCommand" v-model="command" />
+				<p-btn icon="pi fi fi-flutter-right" class="button-bigtext" @click="sendCommand" />
 			</div>
 			<!-- <div class="flex-row misc-buttons">
 				<MiscButtons />
@@ -41,7 +45,7 @@
 
 <script>
 import '../assets/common-styles.css';
-import { mapMutations } from 'vuex'
+import { mapMutations, mapGetters } from 'vuex'
 import User from '../components/User.vue';
 import MiscButtons from '../components/MiscButtons.vue'
 
@@ -59,69 +63,41 @@ export default {
 		// }
 	},
 	data: () => ({
-		cmdLogs: [
-			{ text: 'hello motherfucka' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text' },
-			{ text: 'a text ass' },
-		]
+		command: '',
+		selection: null
 	}),
 	methods: {
-		...mapMutations(['modifyUser'])
+		...mapMutations(['modifyUser']),
+		async sendCommand() {
+			let cmd = this.command;
+			this.command = '';
+			await FWGUI.exposeEnd();
+			await FWGUI.Exec(cmd);
+		}
 	}
 };
 </script>
 
 <style>
 	#users-list {
-		height: 100%;
 		width: 30%;
 		min-width: 200px;
 		max-width: 350px;
+	}
+	.list-panel {
+		height: 100%;
 		display: flex;
 		flex-flow: column;
 		overflow: hidden;
 	}
-	#users-list > .p-toggleable-content {
-		overflow-y: scroll;
+	.list-panel > .p-toggleable-content {
+		overflow-y: hidden;
 		flex-grow: 1;
 	}
-	#users-list .p-panel-content {
+	.list-panel .p-panel-content {
+		overflow-y: scroll;
 		padding: 0;
+		height: 100%;
 	}
 	.user-button {
 		cursor: pointer;
@@ -141,14 +117,7 @@ export default {
 		background-color: var(--selected-pale);
 	}
 
-	#cmd-logs {
-		flex-grow: 1;
-		overflow: hidden;
-	}
 	.cmd-log {
 		text-align: left;
-	}
-	#cmd-logs .p-orderlist-list {
-		flex-grow: 1;
 	}
 </style>

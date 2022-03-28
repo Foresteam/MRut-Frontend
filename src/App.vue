@@ -52,8 +52,9 @@
 			}
 		},
 		async mounted() {
+			for (let name of ['setUser', 'modifyUser', 'cmdLog'])
+				await FWGUI.expose(name, (...args) => this.$store.commit(name, ...args)); //this.$store.commit(name, args)
 			await FWGUI.exposeEnd();
-			FWGUI.hello('fucken slave');
 		}
 	};
 </script>

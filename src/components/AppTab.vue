@@ -15,10 +15,7 @@ export default {
 		go(to) {
 			location.href = `#${to}`;
 		}
-	},
-    mounted() {
-        console.log(this.item);
-    }
+	}
 };
 </script>
 
