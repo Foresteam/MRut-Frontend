@@ -15,16 +15,19 @@
             v-model="slotProps.option.connected"
             class="p-button-rounded"
         /> -->
+		<p-progress-spinner v-if="processing" strokeWidth="5px" />
     </div>
 </template>
 
 <script>
 import Online from './Online.vue';
+import ProgressSpinner from 'primevue/progressspinner';
 
 export default {
-    props: ['online', 'address', 'id', 'name'],
+    props: ['online', 'address', 'id', 'name', 'processing'],
     components: {
-        Online
+        Online,
+		'p-progress-spinner': ProgressSpinner
     }
 };
 </script>
@@ -41,5 +44,9 @@ export default {
 		flex-flow: column;
 		margin-left: 7pt;
 		flex-grow: 1;
+	}
+	.user > div:nth-of-type(2) {
+		width: 35px;
+		height: 35px;
 	}
 </style>
