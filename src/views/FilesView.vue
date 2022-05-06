@@ -127,7 +127,7 @@ export default {
 		selectedUser: null,
 		selectedFiles: null,
 		applyForAll: false,
-		path: 'Ass:/School/1st September/Unlucky me/',
+		path: 'S:/School/1st September/Unlucky me/',
 		files: [
 			{ type: 'dir', name: 'file1', size: '1MB', dateModified: '47.07.2007' },
 			{ type: 'file', name: 'file2', size: '1MB', dateModified: '47.07.2007' },
@@ -152,7 +152,7 @@ export default {
 			{ name: 'Videos', icon: 'pi-video' },
 		],
 		devices: [
-			{ name: 'Ass:\\', path: '/' }
+			{ name: 'S:\\', path: '/' }
 		]
 	}},
 	computed: {

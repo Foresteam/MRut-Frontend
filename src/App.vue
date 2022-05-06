@@ -1,35 +1,35 @@
 <template>
-	<p-toast></p-toast>
-	<p-confirm-dialog></p-confirm-dialog>
-	<div id="header">
-		<name-card/>
-		<p-tab-menu :model="items" style="flex-grow: 1">
-			<template #item="{ item }">
-				<app-tab :item="item"></app-tab>
-			</template>
-		</p-tab-menu>
-	</div>
-	<div id="main">
-		<router-view v-slot="{ Component, route }">
-			<transition name="slide" mode="out-in">
-				<component :is="Component" :key="route.path" />
-			</transition>
-		</router-view>
-	</div>
-	<div id="footer">
-		<div class="title2-5 shift-em" style="line-height: auto">
-			{{ $store.state.title }}
-        </div>
-		<p-divider layout="vertical" />
-        <div class="sexy-font title-2" style="flex-flow: column; line-height: 27px; text-align: left">
-            <div class="_title2">
-                There was footer that you will never see.
-            </div>
-            <div class="_title2">
-                ® Thanks to the censorship.
-            </div>
-        </div>
-	</div>
+		<p-toast></p-toast>
+		<p-confirm-dialog></p-confirm-dialog>
+		<div id="header">
+			<name-card/>
+			<p-tab-menu :model="items" style="flex-grow: 1">
+				<template #item="{ item }">
+					<app-tab :item="item"></app-tab>
+				</template>
+			</p-tab-menu>
+		</div>
+		<div id="main">
+			<router-view v-slot="{ Component, route }">
+				<transition name="slide" mode="out-in">
+					<component :is="Component" :key="route.path" />
+				</transition>
+			</router-view>
+		</div>
+		<div id="footer">
+			<div class="title2-5 shift-em" style="line-height: auto">
+				{{ $store.state.title }}
+			</div>
+			<p-divider layout="vertical" />
+			<div class="sexy-font title-2" style="flex-flow: column; line-height: 27px; text-align: left">
+				<div class="_title2">
+					A footer
+				</div>
+				<div class="_title2">
+					® Should this contain credits?
+				</div>
+			</div>
+		</div>
 </template>
 
 <script>
@@ -59,6 +59,8 @@
 			for (let name of ['setUser', 'modifyUser', 'cmdLog'])
 				await FWGUI.expose(name, (...args) => this.$store.commit(name, ...args)); //this.$store.commit(name, args)
 			this.fetchUsers();
+			await FWGUI.exposeEnd();
+			console.log('fetched?');
 		}
 	};
 </script>
